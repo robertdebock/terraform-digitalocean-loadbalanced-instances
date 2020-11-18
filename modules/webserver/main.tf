@@ -1,6 +1,6 @@
 resource "digitalocean_ssh_key" "default" {
   name       = "key-1"
-  public_key = file(var.ssh_key)
+  public_key = var.ssh_key
 }
 
 resource "digitalocean_droplet" "default" {
