@@ -10,6 +10,24 @@ resource "digitalocean_droplet" "default" {
   region    = var.region
   size      = var.size
   ssh_keys  = [digitalocean_ssh_key.default.fingerprint]
+  user_data = <<EOF
+#cloud-config
+yum_repos:
+  sonar:
+    name: do agent
+    baseurl: "https://repos.insights.digitalocean.com/yum/do-agent/$basearch"
+    failovermethod: priority
+    enabled: true
+    gpgcheck: true
+    gpgkey: "https://repos.insights.digitalocean.com/sonar-agent.asc"
+runcmd:
+  - dnf update -y
+  - rpm --import https://repos.insights.digitalocean.com/sonar-agent.asc
+  - dnf install -y do-agent
+  - systemctl --now enable do-agent
+  - dnf install -y httpd
+  - systemctl --now enable httpd
+EOF
 }
 
 resource "digitalocean_volume" "default" {
@@ -25,15 +43,6 @@ resource "digitalocean_volume_attachment" "default" {
   count      = var.amount
   droplet_id = element(digitalocean_droplet.default.*.id, count.index)
   volume_id  = element(digitalocean_volume.default.*.id, count.index)
-}
-
-resource "null_resource" "null-1" {
-  depends_on = [
-    digitalocean_droplet.default
-  ]
-  provisioner "local-exec" {
-    command = "ansible-playbook -i inventory ${path.module}/ansible/playbook.yml"
-  }
 }
 
 resource "digitalocean_loadbalancer" "default" {
