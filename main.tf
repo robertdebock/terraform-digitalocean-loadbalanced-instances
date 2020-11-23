@@ -23,26 +23,9 @@ yum_repos:
 runcmd:
   - dnf update -y
   - rpm --import https://repos.insights.digitalocean.com/sonar-agent.asc
-  - dnf install -y do-agent
-  - systemctl --now enable do-agent
-  - dnf install -y httpd
-  - systemctl --now enable httpd
+  - dnf install -y do-agent && systemctl --now enable do-agent
+  - dnf install -y httpd && systemctl --now enable httpd
 EOF
-}
-
-resource "digitalocean_volume" "default" {
-  count                   = var.amount
-  region                  = var.region
-  name                    = "volume-${count.index}"
-  size                    = 32
-  initial_filesystem_type = "ext4"
-  description             = "Volume for persistent data."
-}
-
-resource "digitalocean_volume_attachment" "default" {
-  count      = var.amount
-  droplet_id = element(digitalocean_droplet.default.*.id, count.index)
-  volume_id  = element(digitalocean_volume.default.*.id, count.index)
 }
 
 resource "digitalocean_loadbalancer" "default" {
@@ -52,7 +35,6 @@ resource "digitalocean_loadbalancer" "default" {
   forwarding_rule {
     entry_port     = 80
     entry_protocol = "http"
-
     target_port     = 80
     target_protocol = "http"
   }
@@ -60,10 +42,8 @@ resource "digitalocean_loadbalancer" "default" {
   forwarding_rule {
     entry_port     = 443
     entry_protocol = "https"
-
     target_port     = 443
     target_protocol = "https"
-
     tls_passthrough = true
   }
 
