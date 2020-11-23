@@ -1,3 +1,4 @@
 output "loadbalancer_ip_addr" {
-  value = digitalocean_loadbalancer.default.ip
+  description = "The IP (v4) address of the loadbalaner."
+  value       = digitalocean_loadbalancer.default.ip
 }
