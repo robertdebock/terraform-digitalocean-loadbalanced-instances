@@ -33,15 +33,15 @@ resource "digitalocean_loadbalancer" "default" {
   region = var.region
 
   forwarding_rule {
-    entry_port     = 80
-    entry_protocol = "http"
+    entry_port      = 80
+    entry_protocol  = "http"
     target_port     = 80
     target_protocol = "http"
   }
 
   forwarding_rule {
-    entry_port     = 443
-    entry_protocol = "https"
+    entry_port      = 443
+    entry_protocol  = "https"
     target_port     = 443
     target_protocol = "https"
     tls_passthrough = true
