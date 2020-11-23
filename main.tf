@@ -48,8 +48,8 @@ resource "digitalocean_loadbalancer" "default" {
   }
 
   healthcheck {
-    port     = 22
-    protocol = "tcp"
+    port     = 80
+    protocol = "http"
   }
 
   droplet_ids = digitalocean_droplet.default.*.id
