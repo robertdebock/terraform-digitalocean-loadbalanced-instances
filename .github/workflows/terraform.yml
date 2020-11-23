@@ -9,6 +9,6 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
       - name: terraform
-        uses: robertdebock/terraform-action@1.0.1
+        uses: robertdebock/terraform-action@1.0.2
         with:
-          file: ./examples/default/main.tf
+          directory: ./examples/default
