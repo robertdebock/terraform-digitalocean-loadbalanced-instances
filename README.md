@@ -5,15 +5,17 @@ A set of resources to make a webserver environment for serving HTML.
 ## Overview
 
 ```
-    +--- loadbalancer ---+
-    | - http -> http     |
-    | - https -> https   |
-    +--------------------+
-       |              |
-       V              V
-+--- web-0 ----+ +--- web-# ----+
-| apache httpd | | apache httpd |
-+--------------+ +--------------+
++--- loadbalancer ---+
+| - http -> http     |
+| - https -> https   |
++--------------------+
+       |
+       V
+ +--- web-0 ----+
+ | apache httpd |-+
+ +--------------+ |-+
+   +--------------+ |
+     +--------------+
 ```
 
 ## Setup
