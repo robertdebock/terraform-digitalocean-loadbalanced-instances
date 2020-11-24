@@ -10,22 +10,6 @@ resource "digitalocean_droplet" "default" {
   region    = var.region
   size      = var.size
   ssh_keys  = [digitalocean_ssh_key.default.fingerprint]
-  user_data = <<EOF
-#cloud-config
-yum_repos:
-  sonar:
-    name: do agent
-    baseurl: "https://repos.insights.digitalocean.com/yum/do-agent/$basearch"
-    failovermethod: priority
-    enabled: true
-    gpgcheck: true
-    gpgkey: "https://repos.insights.digitalocean.com/sonar-agent.asc"
-runcmd:
-  - dnf update -y
-  - rpm --import https://repos.insights.digitalocean.com/sonar-agent.asc
-  - dnf install -y do-agent && systemctl --now enable do-agent
-  - dnf install -y httpd && systemctl --now enable httpd
-EOF
 }
 
 resource "digitalocean_loadbalancer" "default" {
@@ -50,7 +34,7 @@ resource "digitalocean_loadbalancer" "default" {
   healthcheck {
     port     = 80
     protocol = "http"
-    path     = "/"
+    path     = var.healthcheck_path
   }
 
   droplet_ids = digitalocean_droplet.default.*.id

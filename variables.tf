@@ -22,6 +22,12 @@ variable "amount" {
   default     = 3
 }
 
+variable "healtcheck_path" {
+  description = "The path to check for in the loadbalancer."
+  type        = string
+  default     = "/"
+}
+
 variable "ssh_key" {
   description = "The public ssh key to place on the webservers."
   type        = string
