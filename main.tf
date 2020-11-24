@@ -50,6 +50,7 @@ resource "digitalocean_loadbalancer" "default" {
   healthcheck {
     port     = 80
     protocol = "http"
+    path     = "/"
   }
 
   droplet_ids = digitalocean_droplet.default.*.id
